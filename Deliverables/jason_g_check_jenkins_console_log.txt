@@ -1,0 +1,174 @@
+Started by GitHub push by jasonc2007
+Obtained Jenkinsfile from git https://github.com/jasonc2007/Class_7_G_Check
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/lib/jenkins/workspace/jason_g_check_pipeline
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/lib/jenkins/workspace/jason_g_check_pipeline/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/jasonc2007/Class_7_G_Check # timeout=10
+Fetching upstream changes from https://github.com/jasonc2007/Class_7_G_Check
+ > git --version # timeout=10
+ > git --version # 'git version 2.50.1'
+ > git fetch --tags --force --progress -- https://github.com/jasonc2007/Class_7_G_Check +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision 13be51efe6e455b43e7ba716394150e5a57edd9e (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 13be51efe6e455b43e7ba716394150e5a57edd9e # timeout=10
+Commit message: "g check update"
+ > git rev-list --no-walk 292fe60b615cc0c345077b4cd25bcea6050d89bf # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Set AWS Credentials)
+[Pipeline] withCredentials
+Masking supported pattern matches of $AWS_ACCESS_KEY_ID or $AWS_SECRET_ACCESS_KEY
+[Pipeline] {
+[Pipeline] sh
++ echo 'AWS_ACCESS_KEY_ID: ****'
+AWS_ACCESS_KEY_ID: ****
++ aws sts get-caller-identity
+{
+    "UserId": "AIDAZHHTU2J66LZ3ETZ4E",
+    "Account": "634018648701",
+    "Arn": "arn:aws:iam::634018648701:user/jenkins_user"
+}
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Checkout Code)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+No credentials specified
+ > git rev-parse --resolve-git-dir /var/lib/jenkins/workspace/jason_g_check_pipeline/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/jasonc2007/Class_7_G_Check # timeout=10
+Fetching upstream changes from https://github.com/jasonc2007/Class_7_G_Check
+ > git --version # timeout=10
+ > git --version # 'git version 2.50.1'
+ > git fetch --tags --force --progress -- https://github.com/jasonc2007/Class_7_G_Check +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision 13be51efe6e455b43e7ba716394150e5a57edd9e (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 13be51efe6e455b43e7ba716394150e5a57edd9e # timeout=10
+Commit message: "g check update"
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Initialize Terraform)
+[Pipeline] withCredentials
+Masking supported pattern matches of $AWS_ACCESS_KEY_ID or $AWS_SECRET_ACCESS_KEY
+[Pipeline] {
+[Pipeline] sh
++ terraform init
+[0m[1mInitializing the backend...[0m
+[0m[1mInitializing provider plugins...[0m
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Using previously-installed hashicorp/aws v5.100.0
+
+[0m[1m[32mTerraform has been successfully initialized![0m[32m[0m
+[0m[32m
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.[0m
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Validate Terraform)
+[Pipeline] sh
++ terraform validate
+[32m[1mSuccess![0m The configuration is valid.
+[0m
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Format Terraform)
+[Pipeline] sh
++ terraform fmt
+main.tf
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Plan Terraform)
+[Pipeline] withCredentials
+Masking supported pattern matches of $AWS_ACCESS_KEY_ID or $AWS_SECRET_ACCESS_KEY
+[Pipeline] {
+[Pipeline] sh
++ terraform plan -out=tfplan
+[0m[1maws_s3_bucket.g_check_bucket: Refreshing state... [id=jenkins-20260329075315587300000001][0m
+[0m[1maws_s3_object.theo_approval_placeholder: Refreshing state... [id=Deliverables/theo_approval_placeholder.jpeg][0m
+[0m[1maws_s3_object.github_working_webhook_trigger: Refreshing state... [id=Deliverables/github_working_webhook trigger.jpeg][0m
+[0m[1maws_s3_object.armageddon_repo_url: Refreshing state... [id=Deliverables/armageddon_repo_url.md][0m
+[0m[1maws_s3_object.succesful_jenkins_tf_deployment_1: Refreshing state... [id=Deliverables/succesful_jenkins_tf_deployment_1.jpeg][0m
+
+[0m[1m[32mNo changes.[0m[1m Your infrastructure matches the configuration.[0m
+
+[0mTerraform has compared your real infrastructure against your configuration
+and found no differences, so no changes are needed.
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Apply Terraform)
+[Pipeline] input
+Approve Terraform Apply?
+Deploy or Abort
+Approved by Jason Cramer
+[Pipeline] withCredentials
+Masking supported pattern matches of $AWS_ACCESS_KEY_ID or $AWS_SECRET_ACCESS_KEY
+[Pipeline] {
+[Pipeline] sh
++ terraform apply -auto-approve tfplan
+[0m[1m[32m
+Apply complete! Resources: 0 added, 0 changed, 0 destroyed.[0m
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Optional Destroy)
+[Pipeline] script
+[Pipeline] {
+[Pipeline] input
+Input requested
+Approved by Jason Cramer
+[Pipeline] echo
+Skipping destroy
+[Pipeline] }
+[Pipeline] // script
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+Terraform deployment completed successfully!
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS

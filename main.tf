@@ -48,3 +48,17 @@ resource "aws_s3_object" "theo_approval_placeholder" {
   source = "Deliverables/theo_approval_placeholder.jpeg"
   etag   = filemd5("Deliverables/theo_approval_placeholder.jpeg")
 }
+
+resource "aws_s3_object" "jason_g_check_jenkins_console_log" {
+  bucket = aws_s3_bucket.g_check_bucket.id
+  key    = "Deliverables/jason_g_check_jenkins_console_log.txt"
+  source = "Deliverables/jason_g_check_jenkins_console_log.txt"
+  etag   = filemd5("Deliverables/jason_g_check_jenkins_console_log.txt")
+}
+
+resource "aws_s3_object" "s3_bucket_proof" {
+  bucket = aws_s3_bucket.g_check_bucket.id
+  key    = "Deliverables/s3_bucket_proof.jpeg"
+  source = "Deliverables/s3_bucket_proof.jpeg"
+  etag   = filemd5("Deliverables/s3_bucket_proof.jpeg")
+}
